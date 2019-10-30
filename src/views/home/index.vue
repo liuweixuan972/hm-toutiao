@@ -3,7 +3,7 @@
     <el-aside :width="isOpen?'200px':'64px'">
       <div class="logo" :class="{smallLogo:!isOpen}"></div>
       <el-menu
-        default-active="1"
+        default-active="/"
         background-color="#002033"
         text-color="#fff"
         active-text-color="#ffd04b"
@@ -49,15 +49,15 @@
       <el-header>
         <span class="el-icon-s-fold" @click="toggleMenu"></span>
         <span class="text">江苏传智播客科技教育有限公司</span>
-        <el-dropdown class="dropdown">
-          <img class="Img" src="../../assets/avatar.jpg" alt />
-          <span class="el-dropdown-link">
-            用户名
+        <el-dropdown class="dropdown" @command="handClick">
+          <img class="Img" :src="photo" alt />
+          <span class="el-dropdown-link" style="font-weight:700">
+            {{name}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -69,18 +69,36 @@
 </template>
 
 <script>
+import local from '../../utils/local'
 export default {
   data () {
     return {
       // 是不是展开的
-      isOpen: true
+      isOpen: true,
+      photo: '',
+      name: ''
     }
   },
   methods: {
     toggleMenu () {
       // 切换侧边栏  展开与收起
       this.isOpen = !this.isOpen
+    },
+    setting () {
+      this.$router.push('/setting')
+    },
+    loginout () {
+      local.delUser()
+      this.$router.push('/login')
+    },
+    handClick (command) {
+      this[command]()
     }
+  },
+  created () {
+    const user = local.getUser()
+    this.photo = user.photo
+    this.name = user.name
   }
 }
 </script>
@@ -97,7 +115,7 @@ export default {
     .logo {
       width: 100%;
       height: 60px;
-      background: #002244;
+      background-color: #002244;
       background: url(../../assets/logo_admin.png) no-repeat center / 140px auto;
     }
     .smallLogo {
@@ -108,6 +126,7 @@ export default {
   .el-header {
     border-bottom: 1px solid #ddd;
     line-height: 60px;
+    background-color: cornflowerblue;
     .el-icon-s-fold {
       font-size: 30px;
       vertical-align: middle;
@@ -115,6 +134,7 @@ export default {
     .text {
       vertical-align: middle;
       margin-left: 20px;
+      font-weight: 700;
     }
     .dropdown {
       float: right;
@@ -122,6 +142,7 @@ export default {
         width: 30px;
         height: 30px;
         vertical-align: middle;
+        border-radius: 50%;
       }
     }
   }

@@ -11,6 +11,6 @@ export default {}
 <style scoped lang='less'>
 img {
   display: block;
-  margin: 0 auto;
+  margin: 150px auto;
 }
 </style>
